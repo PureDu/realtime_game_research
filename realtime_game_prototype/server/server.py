@@ -38,7 +38,7 @@ def create_app():
 
     @app.close_conn
     def close_conn(conn):
-        app.conn_dict.pop(conn.conn_id)
+        app.conn_dict.pop(conn.conn_id, None)
 
     @app.create_worker
     def create_worker():
