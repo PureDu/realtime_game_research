@@ -47,14 +47,16 @@ def create_worker():
 
 @app.route(cmds.CMD_USER_READY)
 def user_ready(request):
-    if len(app.conn_dict) >= 2 and not filter(lambda x: not x.user_ready, app.conn_dict):
-        # 人数大于等于2，并且所有人都已经准备好了
-        # 就可以下发游戏开始通知了
+    if len(app.conn_dict) < 2 or filter(lambda x: not x.user_ready, app.conn_dict):
+        return
 
-        box = Box()
-        box.cmd = cmds.EVT_GAME_START
+    # 人数大于等于2，并且所有人都已经准备好了
+    # 就可以下发游戏开始通知了
 
-        data = box.pack()
+    box = Box()
+    box.cmd = cmds.EVT_GAME_START
 
-        for conn in request.conn_dict.values():
-            conn.write(data)
+    data = box.pack()
+
+    for conn in request.conn_dict.values():
+        conn.write(data)

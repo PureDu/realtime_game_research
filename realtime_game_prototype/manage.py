@@ -16,7 +16,7 @@ def runserver(host, port):
     """
     启动服务器
     """
-    from .server.server import app
+    from server.server import app
 
     app.run(host, port)
 
