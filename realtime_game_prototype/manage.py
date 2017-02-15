@@ -11,7 +11,7 @@ def cli():
 @cli.command()
 @click.option('-t', '--host', default='127.0.0.1',
               help='host')
-@click.option('-p', '--port', type=int, help='port')
+@click.option('-p', '--port', type=int, help='port', required=True)
 def runserver(host, port):
     """
     启动服务器

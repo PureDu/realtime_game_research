@@ -7,7 +7,7 @@ from gevent.queue import Queue
 from haven import GHaven
 from netkit.box import Box
 
-from ..share import cmds
+from share import cmds
 
 app = GHaven(Box)
 
