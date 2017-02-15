@@ -60,5 +60,4 @@ def create_app():
         for conn in request.conn_dict.values():
             conn.write(data)
 
-
     return app
