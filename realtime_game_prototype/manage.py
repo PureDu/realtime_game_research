@@ -16,8 +16,10 @@ def runserver(host, port):
     """
     启动服务器
     """
-    from server.server import app
+    from gevent import monkey; monkey.patch_all()
+    from server.server import create_app
 
+    app = create_app()
     app.run(host, port)
 
 
@@ -26,6 +28,7 @@ def runclient():
     """
     启动客户端
     """
+    from gevent import monkey; monkey.patch_all()
     pass
 
 
