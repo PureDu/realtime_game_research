@@ -50,6 +50,8 @@ class Client(object):
 
                 click.secho('msg: %r' % msg, fg='green')
 
+            # TODO 帧检测
+
     # 表现层
     def show_loop(self):
         pass
