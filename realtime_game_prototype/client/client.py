@@ -67,6 +67,10 @@ class Client(object):
 
             self.logger.debug('box: %r', box)
 
+            if not box:
+                # 掉线了
+                continue
+
             self.net_msg_queue.put(box)
 
     # 逻辑层
