@@ -94,6 +94,10 @@ def create_app():
     def before_request(request):
         app.logger.debug('request: %r', request)
 
+    @app.before_response
+    def before_response(conn, response):
+        app.logger.debug('conn: %s, response: %r', conn, response)
+
     @app.route(cmds.CMD_USER_READY)
     def user_ready(request):
         # 设置为True
