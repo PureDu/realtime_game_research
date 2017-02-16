@@ -62,9 +62,12 @@ class Client(object):
 
             while not self.net_msg_queue.empty():
                 # 会自己返回
-                msg = self.net_msg_queue.get_nowait()
+                box = self.net_msg_queue.get_nowait()
 
-                click.secho('msg: %r' % msg, fg='green')
+                click.secho(
+                    'kernel_frame_index: %s, box: %r' % (self.kernel_frame_index, box),
+                    fg='green'
+                )
 
             # do something
 
