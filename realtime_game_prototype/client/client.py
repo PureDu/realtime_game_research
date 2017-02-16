@@ -97,7 +97,7 @@ class Client(object):
                 except Queue.Empty:
                     break
 
-                if box.cmd == cmds.CMD_USER_ACTION:
+                if box.cmd == cmds.CMD_EVT_USER_ACTION:
                     # 这里仅作基础演示
                     self.logic_msg_queue.put(box.get_json())
 
