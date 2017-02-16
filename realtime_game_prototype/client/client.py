@@ -98,7 +98,7 @@ class Client(object):
                     break
 
                 # 需要判断帧是否与服务器一致
-                if box.frame_index != self.logic_frame_index:
+                if box.frame_index > 0 and box.frame_index != self.logic_frame_index:
                     # TODO 需要追赶或者延后
                     self.logger.warn('invalid logic_frame_index. logic_frame_index: %s, box: %r',
                                      self.logic_frame_index, box)
