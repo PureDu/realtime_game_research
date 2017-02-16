@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import click
+import logging
 import time
 import gevent
 from gevent.queue import Queue
 
+import colorlog
 from netkit.contrib.tcp_client import TcpClient
 
 from share.game_box import GameBox
@@ -13,6 +14,8 @@ from share import constants
 
 
 class Client(object):
+
+    logger = None
 
     tcp_client = None
 
@@ -23,6 +26,22 @@ class Client(object):
     kernel_frame_index = 0
 
     def __init__(self, host, port):
+        # 初始化log
+        logger = logging.getLogger('main')
+        logger.setLevel(logging.DEBUG)
+        console_handler = logging.StreamHandler()
+        console_handler.setFormatter(colorlog.ColoredFormatter(constants.COLOR_LOG_FORMAT, log_colors={
+            'DEBUG':    'cyan',
+            'INFO':     'green',
+            'WARNING':  'yellow',
+            'ERROR':    'red',
+            'CRITICAL': 'red',
+        }))
+        console_handler.setLevel(logging.DEBUG)
+        logger.addHandler(console_handler)
+
+        self.logger = logger
+
         self.net_msg_queue = Queue()
         self.tcp_client = TcpClient(GameBox, host, port)
 
@@ -64,9 +83,8 @@ class Client(object):
                 # 会自己返回
                 box = self.net_msg_queue.get_nowait()
 
-                click.secho(
-                    'kernel_frame_index: %s, box: %r' % (self.kernel_frame_index, box),
-                    fg='green'
+                self.logger.debug(
+                    'kernel_frame_index: %s, box: %r', self.kernel_frame_index, box
                 )
 
             # do something
@@ -86,12 +104,12 @@ class Client(object):
         gevent.spawn(self.show_loop)
 
         # 等待连接
-        click.secho('waiting connect...', fg='yellow')
+        self.logger.info('waiting connect...')
 
         while self.tcp_client.closed():
             time.sleep(0.1)
 
-        click.secho('connected', fg='green')
+        self.logger.info('connected')
 
         while True:
             try:
@@ -108,7 +126,7 @@ class Client(object):
                         action=text
                     ))
                 else:
-                    click.secho('invalid input: %s' % text, fg='red')
+                    self.logger.warn('invalid input: %s', text)
 
             except KeyboardInterrupt:
                 break

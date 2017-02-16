@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import logging
 import weakref
 import time
-import click
 import gevent
 from gevent.queue import Queue
 from haven import GHaven
+import colorlog
 
 from share.game_box import GameBox
 from share import cmds
@@ -24,6 +25,22 @@ def create_app():
 
     # 核心帧数index
     app.frame_index = 0
+
+    # 初始化log
+    logger = logging.getLogger('main')
+    logger.setLevel(logging.DEBUG)
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(colorlog.ColoredFormatter(constants.COLOR_LOG_FORMAT, log_colors={
+        'DEBUG':    'cyan',
+        'INFO':     'green',
+        'WARNING':  'yellow',
+        'ERROR':    'red',
+        'CRITICAL': 'red',
+    }))
+    console_handler.setLevel(logging.DEBUG)
+    logger.addHandler(console_handler)
+
+    app.logger = logger
 
     def game_loop():
         app.frame_index = 0
@@ -76,7 +93,7 @@ def create_app():
 
     @app.before_request
     def before_request(request):
-        click.secho('request: %r' % request, fg='green')
+        app.logger.debug('request: %r', request)
 
     @app.route(cmds.CMD_USER_READY)
     def user_ready(request):
@@ -103,13 +120,11 @@ def create_app():
             # 广播
             app.msg_queue.put(request.box)
         else:
-            click.secho(
-                'invalid frame_index. frame_index: %s, request: %r, conn_id: %s' % (
-                    app.frame_index,
-                    request,
-                    request.conn.conn_id
-                ),
-                fg='red'
+            app.logger.error(
+                'invalid frame_index. frame_index: %s, request: %r, conn_id: %s',
+                app.frame_index,
+                request,
+                request.conn.conn_id
             )
 
     return app
