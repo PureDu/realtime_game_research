@@ -51,7 +51,7 @@ def create_app():
         app.logger.debug('game loop start')
         app.frame_index = 0
         # 游戏帧循环
-        frame_interval = 1.0 / constants.KERNEL_FRAME_RATE
+        frame_interval = 1.0 / constants.LOGIC_FRAME_RATE
         # 每一帧，从 net_msg_queue 将数据取出来
         while True:
             app.frame_index += 1
@@ -62,7 +62,7 @@ def create_app():
                 except Queue.Empty:
                     break
 
-                # 带着广播帧下去
+                # 带着服务器帧下去
                 box.frame_index = app.frame_index
                 # 广播
                 broadcast(box)
@@ -130,8 +130,9 @@ def create_app():
 
     @app.route(cmds.CMD_USER_ACTION)
     def user_action(request):
-        if request.box.frame_index == app.frame_index:
-            # 广播
+        if abs(request.box.frame_index - app.frame_index) <= 5:
+            # 误差之内
+            # 客户端
             box = GameBox()
             box.cmd = cmds.CMD_EVT_USER_ACTION
 

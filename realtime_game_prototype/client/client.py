@@ -85,7 +85,7 @@ class Client(object):
                 break
 
         self.logic_frame_index = 0
-        frame_interval = 1.0 / constants.KERNEL_FRAME_RATE
+        frame_interval = 1.0 / constants.LOGIC_FRAME_RATE
         # 每一帧，从 net_msg_queue 将数据取出来
         while True:
             self.logic_frame_index += 1
@@ -111,7 +111,7 @@ class Client(object):
 
     # 表现层
     def render_loop(self):
-        frame_interval = 1.0 / constants.SHOW_FRAME_RATE
+        frame_interval = 1.0 / constants.RENDER_FRAME_RATE
 
         while True:
             while True:
