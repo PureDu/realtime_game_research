@@ -88,7 +88,7 @@ class Client(object):
         # 等待连接
         click.secho('waiting connect...', fg='yellow')
 
-        while self.tcp_client.close():
+        while self.tcp_client.closed():
             time.sleep(0.1)
 
         click.secho('connected', fg='green')
@@ -96,6 +96,19 @@ class Client(object):
         while True:
             try:
                 text = raw_input('please input:(ready/move/hit)')
+
+                box = GameBox()
+
+                if text == 'ready':
+                    box.cmd = cmds.CMD_USER_READY
+                    self.tcp_client.write(box)
+                elif text in ('move', 'hit'):
+                    box.cmd = cmds.CMD_USER_ACTION
+                    box.set_json(dict(
+                        action=text
+                    ))
+                else:
+                    click.secho('invalid input: %s' % text, fg='red')
 
             except KeyboardInterrupt:
                 break
