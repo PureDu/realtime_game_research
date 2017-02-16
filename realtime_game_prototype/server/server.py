@@ -74,6 +74,10 @@ def create_app():
         """
         gevent.spawn(game_loop)
 
+    @app.before_request
+    def before_request(request):
+        click.secho('request: %r' % request, fg='green')
+
     @app.route(cmds.CMD_USER_READY)
     def user_ready(request):
         # 设置为True

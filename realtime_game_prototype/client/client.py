@@ -95,7 +95,7 @@ class Client(object):
 
         while True:
             try:
-                text = raw_input('please input:(ready/move/hit)')
+                text = raw_input('please input(ready/move/hit):')
 
                 box = GameBox()
 
