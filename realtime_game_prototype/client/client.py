@@ -85,11 +85,20 @@ class Client(object):
         gevent.spawn(self.kernel_loop)
         gevent.spawn(self.show_loop)
 
+        # 等待连接
+        click.secho('waiting connect...', fg='yellow')
+
+        while self.tcp_client.close():
+            time.sleep(0.1)
+
+        click.secho('connected', fg='green')
+
         while True:
             try:
-                time.sleep(1)
+                text = raw_input('please input:(ready/move/hit)')
+
             except KeyboardInterrupt:
-                return
+                break
 
 
 def create_app(host, port):
