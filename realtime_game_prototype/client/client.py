@@ -65,6 +65,8 @@ class Client(object):
             # 到这里就一定连接成功了
             box = self.tcp_client.read()
 
+            self.logger.debug('box: %r', box)
+
             self.net_msg_queue.put(box)
 
     # 核心层
@@ -73,6 +75,7 @@ class Client(object):
             # 在游戏没有开始前，使用阻塞等待的方式
             # 这样可以确保核心层主循环在server-client同时启动
             box = self.net_msg_queue.get()
+            self.logger.debug('box: %r', box)
 
             if box.cmd == cmds.CMD_EVT_GAME_START:
                 break
