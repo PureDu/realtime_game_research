@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+requirements: haven click gevent
+"""
+
 import click
 
 
