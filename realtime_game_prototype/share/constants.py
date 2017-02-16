@@ -7,7 +7,7 @@ LOGIC_FRAME_RATE = 20
 RENDER_FRAME_RATE = 60
 
 # 服务器与客户端之间帧差别的最大值
-LOGIC_FRAME_MAX_DIFF = 5
+LOGIC_FRAME_MAX_DIFF = 10
 
 # 日志
 LOG_FORMAT = '\n'.join((

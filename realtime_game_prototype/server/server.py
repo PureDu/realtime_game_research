@@ -130,7 +130,7 @@ def create_app():
 
     @app.route(cmds.CMD_USER_ACTION)
     def user_action(request):
-        if abs(request.box.frame_index - app.frame_index) > 5:
+        if abs(request.box.frame_index - app.frame_index) > constants.LOGIC_FRAME_MAX_DIFF:
             app.logger.error(
                 'invalid frame_index. frame_index: %s, box: %r, conn_id: %s',
                 app.frame_index,

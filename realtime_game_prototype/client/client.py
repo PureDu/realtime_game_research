@@ -98,7 +98,9 @@ class Client(object):
                     break
 
                 # 需要判断帧是否与服务器一致
-                # 如果
+                if box.frame_index != self.logic_frame_index:
+                    # TODO 需要追赶或者延后
+                    self.logic_frame_index = box.frame_index
 
                 if box.cmd == cmds.CMD_EVT_USER_ACTION:
                     # 这里仅作基础演示
