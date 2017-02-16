@@ -79,6 +79,9 @@ def create_app():
 
     @app.route(cmds.CMD_USER_READY)
     def user_ready(request):
+        # 设置为True
+        request.conn.user_ready = True
+
         if len(app.conn_dict) < 2 or filter(lambda x: not x.user_ready, app.conn_dict):
             return
 
