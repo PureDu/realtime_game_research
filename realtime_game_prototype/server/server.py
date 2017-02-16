@@ -56,8 +56,11 @@ def create_app():
         while True:
             app.frame_index += 1
             # do something
-            while not app.msg_queue.empty():
+            while True:
                 box = app.msg_queue.get_nowait()
+                if not box:
+                    break
+
                 # 广播
                 broadcast(box)
 

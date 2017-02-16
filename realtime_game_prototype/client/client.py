@@ -86,9 +86,12 @@ class Client(object):
         while True:
             self.kernel_frame_index += 1
 
-            while not self.net_msg_queue.empty():
+            while True:
                 # 会自己返回
                 box = self.net_msg_queue.get_nowait()
+
+                if not box:
+                    break
 
                 if box.cmd == cmds.CMD_USER_ACTION:
                     # 这里仅作基础演示
@@ -107,9 +110,12 @@ class Client(object):
         frame_interval = 1.0 / constants.SHOW_FRAME_RATE
 
         while True:
-            while not self.kernel_msg_queue.empty():
+            while True:
                 # 会自己返回
                 msg = self.kernel_msg_queue.get_nowait()
+
+                if not msg:
+                    break
 
                 # 作展示
                 self.logger.info('msg: %s', msg)
