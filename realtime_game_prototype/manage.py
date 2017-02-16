@@ -2,6 +2,18 @@
 
 """
 requirements: haven click
+
+使用:
+
+python manage.py runserver
+
+python manage.py runclient
+python manage.py runclient
+
+然后在两个client分别输入 ready，使游戏启动。
+之后输入 move/hit 等 action 命令，即可在client间同步
+
+
 """
 
 import click
