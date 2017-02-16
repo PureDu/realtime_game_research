@@ -6,6 +6,9 @@ LOGIC_FRAME_RATE = 20
 # 客户端表现层帧率。客户端可以自己调整，与服务器交互逻辑无关
 RENDER_FRAME_RATE = 60
 
+# 服务器与客户端之间帧差别的最大值
+LOGIC_FRAME_MAX_DIFF = 5
+
 # 日志
 LOG_FORMAT = '\n'.join((
     '/' + '-' * 80,

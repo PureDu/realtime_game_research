@@ -97,6 +97,9 @@ class Client(object):
                 except Queue.Empty:
                     break
 
+                # 需要判断帧是否与服务器一致
+                # 如果
+
                 if box.cmd == cmds.CMD_EVT_USER_ACTION:
                     # 这里仅作基础演示
                     self.logic_msg_queue.put(box.get_json())

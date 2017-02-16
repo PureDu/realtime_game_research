@@ -130,22 +130,7 @@ def create_app():
 
     @app.route(cmds.CMD_USER_ACTION)
     def user_action(request):
-        if abs(request.box.frame_index - app.frame_index) <= 5:
-            # 误差之内
-            # 客户端
-            box = GameBox()
-            box.cmd = cmds.CMD_EVT_USER_ACTION
-
-            payload = request.box.get_json()
-            payload['conn_id'] = request.conn.conn_id
-            box.set_json(payload)
-
-            app.msg_queue.put(box)
-
-            request.write(dict(
-                ret=0
-            ))
-        else:
+        if abs(request.box.frame_index - app.frame_index) > 5:
             app.logger.error(
                 'invalid frame_index. frame_index: %s, box: %r, conn_id: %s',
                 app.frame_index,
@@ -156,5 +141,21 @@ def create_app():
             request.write(dict(
                 ret=rets.RET_INVALID_FRAME_INDEX
             ))
+            return
+
+        # 误差之内
+        # 客户端
+        box = GameBox()
+        box.cmd = cmds.CMD_EVT_USER_ACTION
+
+        payload = request.box.get_json()
+        payload['conn_id'] = request.conn.conn_id
+        box.set_json(payload)
+
+        app.msg_queue.put(box)
+
+        request.write(dict(
+            ret=0
+        ))
 
     return app
