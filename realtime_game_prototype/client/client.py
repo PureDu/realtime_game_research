@@ -19,8 +19,9 @@ class Client(object):
     # 网络层->核心层
     net_msg_queue = None
 
-    # 核心层帧数
+    # 核心层帧数index
     kernel_frame_index = 0
+
 
     def __init__(self, host, port):
         self.net_msg_queue = Queue()
