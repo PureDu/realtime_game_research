@@ -2,6 +2,7 @@
 
 import weakref
 import time
+import click
 import gevent
 from gevent.queue import Queue
 from haven import GHaven
@@ -87,9 +88,24 @@ def create_app():
         # 启动游戏主循环
         gevent.spawn(game_loop)
 
-        box = Box()
+        box = GameBox()
         box.cmd = cmds.EVT_GAME_START
 
         broadcast(box)
+
+    @app.route(cmds.CMD_USER_INPUT)
+    def user_input(request):
+        if request.box.frame_index == app.frame_index:
+            # 广播
+            app.msg_queue.put(request.box)
+        else:
+            click.secho(
+                'invalid frame_index. frame_index: %s, request: %r, conn_id: %s' % (
+                    app.frame_index,
+                    request,
+                    request.conn.conn_id
+                ),
+                fg='red'
+            )
 
     return app
