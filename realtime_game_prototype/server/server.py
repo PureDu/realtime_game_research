@@ -4,7 +4,7 @@ import logging
 import weakref
 import time
 import thread
-from Queue import Queue
+import Queue
 from haven import THaven
 import colorlog
 
@@ -22,7 +22,7 @@ def create_app():
     app.conn_dict = weakref.WeakValueDictionary()
 
     # 消息
-    app.msg_queue = Queue()
+    app.msg_queue = Queue.Queue()
 
     # 核心帧数index
     app.frame_index = 0
@@ -57,8 +57,9 @@ def create_app():
             app.frame_index += 1
             # do something
             while True:
-                box = app.msg_queue.get_nowait()
-                if not box:
+                try:
+                    box = app.msg_queue.get_nowait()
+                except Queue.Empty:
                     break
 
                 # 广播

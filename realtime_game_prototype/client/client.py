@@ -3,7 +3,7 @@
 import logging
 import time
 import thread
-from Queue import Queue
+import Queue
 
 import colorlog
 from netkit.contrib.tcp_client import TcpClient
@@ -45,8 +45,8 @@ class Client(object):
 
         self.logger = logger
 
-        self.net_msg_queue = Queue()
-        self.kernel_msg_queue = Queue()
+        self.net_msg_queue = Queue.Queue()
+        self.kernel_msg_queue = Queue.Queue()
         self.tcp_client = TcpClient(GameBox, host, port)
 
     def net_loop(self):
@@ -88,9 +88,9 @@ class Client(object):
 
             while True:
                 # 会自己返回
-                box = self.net_msg_queue.get_nowait()
-
-                if not box:
+                try:
+                    box = self.net_msg_queue.get_nowait()
+                except Queue.Empty:
                     break
 
                 if box.cmd == cmds.CMD_USER_ACTION:
@@ -112,9 +112,9 @@ class Client(object):
         while True:
             while True:
                 # 会自己返回
-                msg = self.kernel_msg_queue.get_nowait()
-
-                if not msg:
+                try:
+                    msg = self.kernel_msg_queue.get_nowait()
+                except Queue.Empty:
                     break
 
                 # 作展示
