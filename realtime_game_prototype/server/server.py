@@ -127,9 +127,9 @@ def create_app():
             app.msg_queue.put(box)
         else:
             app.logger.error(
-                'invalid frame_index. frame_index: %s, request: %r, conn_id: %s',
+                'invalid frame_index. frame_index: %s, box: %r, conn_id: %s',
                 app.frame_index,
-                request,
+                request.box,
                 request.conn.conn_id
             )
 

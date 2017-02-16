@@ -137,6 +137,7 @@ class Client(object):
                     self.tcp_client.write(box)
                 elif text in ('move', 'hit'):
                     box.cmd = cmds.CMD_USER_ACTION
+                    box.frame_index = self.kernel_frame_index
                     box.set_json(dict(
                         action=text
                     ))
