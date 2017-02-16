@@ -2,8 +2,8 @@
 
 import logging
 import time
-import gevent
-from gevent.queue import Queue
+import thread
+from Queue import Queue
 
 import colorlog
 from netkit.contrib.tcp_client import TcpClient
@@ -117,9 +117,9 @@ class Client(object):
             time.sleep(frame_interval)
 
     def run(self):
-        gevent.spawn(self.net_loop)
-        gevent.spawn(self.kernel_loop)
-        gevent.spawn(self.show_loop)
+        thread.start_new_thread(self.net_loop, ())
+        thread.start_new_thread(self.kernel_loop, ())
+        thread.start_new_thread(self.show_loop, ())
 
         # 等待连接
         self.logger.info('waiting connect...')

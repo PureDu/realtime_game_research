@@ -3,9 +3,9 @@
 import logging
 import weakref
 import time
-import gevent
-from gevent.queue import Queue
-from haven import GHaven
+import thread
+from Queue import Queue
+from haven import THaven
 import colorlog
 
 from share.game_box import GameBox
@@ -16,7 +16,7 @@ from share import rets
 
 def create_app():
 
-    app = GHaven(GameBox)
+    app = THaven(GameBox)
 
     app.conn_id_inc = 0
     app.conn_dict = weakref.WeakValueDictionary()
@@ -115,7 +115,7 @@ def create_app():
         # 就可以下发游戏开始通知了
 
         # 启动游戏主循环
-        gevent.spawn(game_loop)
+        thread.start_new_thread(game_loop, ())
 
         box = GameBox()
         box.cmd = cmds.CMD_EVT_GAME_START
