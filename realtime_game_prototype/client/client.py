@@ -9,6 +9,7 @@ from netkit.box import Box
 from netkit.contrib.tcp_client import TcpClient
 
 from share import cmds
+from share import constants
 
 
 class Client(object):
@@ -17,6 +18,9 @@ class Client(object):
 
     # 网络层->核心层
     net_msg_queue = None
+
+    # 核心层帧数
+    kernel_frame_index = 0
 
     def __init__(self, host, port):
         self.net_msg_queue = Queue()
@@ -42,6 +46,7 @@ class Client(object):
 
     # 核心层
     def kernel_loop(self):
+        frame_interval = 1.0 / constants.KERNEL_FRAME_RATE
         # 每一帧，从 net_msg_queue 将数据取出来
         while True:
             while not self.net_msg_queue.empty():
@@ -50,11 +55,14 @@ class Client(object):
 
                 click.secho('msg: %r' % msg, fg='green')
 
-            # TODO 帧检测
+            time.sleep(frame_interval)
 
     # 表现层
     def show_loop(self):
-        pass
+        frame_interval = 1.0 / constants.SHOW_FRAME_RATE
+
+        while True:
+            time.sleep(frame_interval)
 
     def run(self):
         gevent.spawn(self.net_loop)
