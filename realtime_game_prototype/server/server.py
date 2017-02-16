@@ -117,7 +117,14 @@ def create_app():
     def user_action(request):
         if request.box.frame_index == app.frame_index:
             # 广播
-            app.msg_queue.put(request.box)
+            box = GameBox()
+            box.cmd = cmds.CMD_EVT_USER_ACTION
+
+            payload = request.box.get_json()
+            payload['conn_id'] = request.conn.conn_id
+            box.set_json(payload)
+
+            app.msg_queue.put(box)
         else:
             app.logger.error(
                 'invalid frame_index. frame_index: %s, request: %r, conn_id: %s',

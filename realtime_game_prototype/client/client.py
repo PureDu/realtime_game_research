@@ -88,7 +88,8 @@ class Client(object):
                 box = self.net_msg_queue.get_nowait()
 
                 if box.cmd == cmds.CMD_USER_ACTION:
-                    self.kernel_msg_queue.put('')
+                    # 这里仅作基础演示
+                    self.kernel_msg_queue.put(box.get_json())
 
                 self.logger.debug(
                     'kernel_frame_index: %s, box: %r', self.kernel_frame_index, box
@@ -103,6 +104,13 @@ class Client(object):
         frame_interval = 1.0 / constants.SHOW_FRAME_RATE
 
         while True:
+            while not self.kernel_msg_queue.empty():
+                # 会自己返回
+                msg = self.kernel_msg_queue.get_nowait()
+
+                # 作展示
+                self.logger.info('msg: %s', msg)
+
             time.sleep(frame_interval)
 
     def run(self):
