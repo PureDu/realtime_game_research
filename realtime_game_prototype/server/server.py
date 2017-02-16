@@ -42,7 +42,12 @@ def create_app():
 
     app.logger = logger
 
+    haven_logger = logging.getLogger('haven')
+    haven_logger.setLevel(logging.ERROR)
+    haven_logger.addHandler(console_handler)
+
     def game_loop():
+        app.logger.debug('game loop start')
         app.frame_index = 0
         # 游戏帧循环
         frame_interval = 1.0 / constants.KERNEL_FRAME_RATE
@@ -85,14 +90,6 @@ def create_app():
         app.conn_dict.pop(conn.conn_id, None)
         app.logger.debug('conn closed. conn_id: %s, conns: %s', conn.conn_id, app.conn_dict.keys())
 
-    @app.create_worker
-    def create_worker():
-        """
-        启动游戏循环
-        :return:
-        """
-        gevent.spawn(game_loop)
-
     @app.before_request
     def before_request(request):
         app.logger.debug('request: %r', request)
@@ -102,7 +99,7 @@ def create_app():
         # 设置为True
         request.conn.user_ready = True
 
-        if len(app.conn_dict) < 2 or filter(lambda x: not x.user_ready, app.conn_dict):
+        if len(app.conn_dict) < 2 or filter(lambda x: not x.user_ready, app.conn_dict.values()):
             return
 
         # 人数大于等于2，并且所有人都已经准备好了
