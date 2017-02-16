@@ -25,10 +25,13 @@ def create_app():
     app.frame_index = 0
 
     def game_loop():
+        app.frame_index = 0
         # 游戏帧循环
         frame_interval = 1.0 / constants.KERNEL_FRAME_RATE
         # 每一帧，从 net_msg_queue 将数据取出来
         while True:
+            app.frame_index += 1
+            # do something
             time.sleep(frame_interval)
 
     @app.create_conn
@@ -62,6 +65,9 @@ def create_app():
 
         # 人数大于等于2，并且所有人都已经准备好了
         # 就可以下发游戏开始通知了
+
+        # 启动游戏主循环
+        gevent.spawn(game_loop)
 
         box = Box()
         box.cmd = cmds.EVT_GAME_START

@@ -46,14 +46,27 @@ class Client(object):
 
     # 核心层
     def kernel_loop(self):
+        while True:
+            # 在游戏没有开始前，使用阻塞等待的方式
+            # 这样可以确保核心层主循环在server-client同时启动
+            box = self.net_msg_queue.get()
+
+            if box.cmd == cmds.EVT_GAME_START:
+                break
+
+        self.kernel_frame_index = 0
         frame_interval = 1.0 / constants.KERNEL_FRAME_RATE
         # 每一帧，从 net_msg_queue 将数据取出来
         while True:
+            self.kernel_frame_index += 1
+
             while not self.net_msg_queue.empty():
                 # 会自己返回
                 msg = self.net_msg_queue.get_nowait()
 
                 click.secho('msg: %r' % msg, fg='green')
+
+            # do something
 
             time.sleep(frame_interval)
 
