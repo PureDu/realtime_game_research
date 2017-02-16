@@ -125,6 +125,7 @@ class Client(object):
                     box.set_json(dict(
                         action=text
                     ))
+                    self.tcp_client.write(box)
                 else:
                     self.logger.warn('invalid input: %s', text)
 

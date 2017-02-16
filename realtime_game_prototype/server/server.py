@@ -78,10 +78,12 @@ def create_app():
 
         # 析构会自动删除
         app.conn_dict[conn.conn_id] = conn
+        app.logger.debug('conn created. conn_id: %s, conns: %s', conn.conn_id, app.conn_dict.keys())
 
     @app.close_conn
     def close_conn(conn):
         app.conn_dict.pop(conn.conn_id, None)
+        app.logger.debug('conn closed. conn_id: %s, conns: %s', conn.conn_id, app.conn_dict.keys())
 
     @app.create_worker
     def create_worker():
