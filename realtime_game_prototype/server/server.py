@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import weakref
-
+import time
 import gevent
 from gevent.queue import Queue
 from haven import GHaven
 from netkit.box import Box
 
 from share import cmds
+from share import constants
 
 
 def create_app():
@@ -20,9 +21,15 @@ def create_app():
     # 消息
     app.msg_queue = Queue()
 
+    # 核心帧数index
+    app.frame_index = 0
+
     def game_loop():
         # 游戏帧循环
-        pass
+        frame_interval = 1.0 / constants.KERNEL_FRAME_RATE
+        # 每一帧，从 net_msg_queue 将数据取出来
+        while True:
+            time.sleep(frame_interval)
 
     @app.create_conn
     def create_conn(conn):

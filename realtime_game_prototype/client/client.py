@@ -22,7 +22,6 @@ class Client(object):
     # 核心层帧数index
     kernel_frame_index = 0
 
-
     def __init__(self, host, port):
         self.net_msg_queue = Queue()
         self.tcp_client = TcpClient(Box, host, port)
