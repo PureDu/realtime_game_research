@@ -62,6 +62,8 @@ def create_app():
                 except Queue.Empty:
                     break
 
+                # 带着广播帧下去
+                box.frame_index = app.frame_index
                 # 广播
                 broadcast(box)
 
