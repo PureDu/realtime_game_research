@@ -93,8 +93,8 @@ def create_app():
 
         broadcast(box)
 
-    @app.route(cmds.CMD_USER_INPUT)
-    def user_input(request):
+    @app.route(cmds.CMD_USER_ACTION)
+    def user_action(request):
         if request.box.frame_index == app.frame_index:
             # 广播
             app.msg_queue.put(request.box)
