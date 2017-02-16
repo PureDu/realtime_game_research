@@ -11,6 +11,7 @@ import colorlog
 from share.game_box import GameBox
 from share import cmds
 from share import constants
+from share import rets
 
 
 def create_app():
@@ -103,6 +104,10 @@ def create_app():
         # 设置为True
         request.conn.user_ready = True
 
+        request.write(dict(
+            ret=0
+        ))
+
         if len(app.conn_dict) < 2 or filter(lambda x: not x.user_ready, app.conn_dict.values()):
             return
 
@@ -129,6 +134,10 @@ def create_app():
             box.set_json(payload)
 
             app.msg_queue.put(box)
+
+            request.write(dict(
+                ret=0
+            ))
         else:
             app.logger.error(
                 'invalid frame_index. frame_index: %s, box: %r, conn_id: %s',
@@ -136,5 +145,9 @@ def create_app():
                 request.box,
                 request.conn.conn_id
             )
+
+            request.write(dict(
+                ret=rets.RET_INVALID_FRAME_INDEX
+            ))
 
     return app
