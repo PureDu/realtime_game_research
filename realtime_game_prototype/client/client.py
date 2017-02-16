@@ -22,6 +22,9 @@ class Client(object):
     # 网络层->核心层
     net_msg_queue = None
 
+    # 核心层->表现层
+    kernel_msg_queue = None
+
     # 核心层帧数index
     kernel_frame_index = 0
 
@@ -43,6 +46,7 @@ class Client(object):
         self.logger = logger
 
         self.net_msg_queue = Queue()
+        self.kernel_msg_queue = Queue()
         self.tcp_client = TcpClient(GameBox, host, port)
 
     def net_loop(self):
@@ -70,7 +74,7 @@ class Client(object):
             # 这样可以确保核心层主循环在server-client同时启动
             box = self.net_msg_queue.get()
 
-            if box.cmd == cmds.EVT_GAME_START:
+            if box.cmd == cmds.CMD_EVT_GAME_START:
                 break
 
         self.kernel_frame_index = 0
@@ -82,6 +86,9 @@ class Client(object):
             while not self.net_msg_queue.empty():
                 # 会自己返回
                 box = self.net_msg_queue.get_nowait()
+
+                if box.cmd == cmds.CMD_USER_ACTION:
+                    self.kernel_msg_queue.put('')
 
                 self.logger.debug(
                     'kernel_frame_index: %s, box: %r', self.kernel_frame_index, box

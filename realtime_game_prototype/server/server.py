@@ -109,7 +109,7 @@ def create_app():
         gevent.spawn(game_loop)
 
         box = GameBox()
-        box.cmd = cmds.EVT_GAME_START
+        box.cmd = cmds.CMD_EVT_GAME_START
 
         broadcast(box)
 
