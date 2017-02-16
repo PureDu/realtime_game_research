@@ -5,15 +5,15 @@ import time
 import gevent
 from gevent.queue import Queue
 from haven import GHaven
-from netkit.box import Box
 
+from share.game_box import GameBox
 from share import cmds
 from share import constants
 
 
 def create_app():
 
-    app = GHaven(Box)
+    app = GHaven(GameBox)
 
     app.conn_id_inc = 0
     app.conn_dict = weakref.WeakValueDictionary()
@@ -32,7 +32,25 @@ def create_app():
         while True:
             app.frame_index += 1
             # do something
+            while True:
+                box = app.msg_queue.get_nowait()
+                if not box:
+                    break
+
+                # 广播
+                broadcast(box)
+
             time.sleep(frame_interval)
+
+    def broadcast(box):
+        """
+        广播
+        :param box:
+        :return:
+        """
+        data = box.pack()
+        for conn in app.conn_dict.values():
+            conn.write(data)
 
     @app.create_conn
     def create_conn(conn):
@@ -72,9 +90,6 @@ def create_app():
         box = Box()
         box.cmd = cmds.EVT_GAME_START
 
-        data = box.pack()
-
-        for conn in request.conn_dict.values():
-            conn.write(data)
+        broadcast(box)
 
     return app

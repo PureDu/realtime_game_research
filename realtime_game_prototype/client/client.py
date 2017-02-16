@@ -5,9 +5,9 @@ import time
 import gevent
 from gevent.queue import Queue
 
-from netkit.box import Box
 from netkit.contrib.tcp_client import TcpClient
 
+from share.game_box import GameBox
 from share import cmds
 from share import constants
 
@@ -24,7 +24,7 @@ class Client(object):
 
     def __init__(self, host, port):
         self.net_msg_queue = Queue()
-        self.tcp_client = TcpClient(Box, host, port)
+        self.tcp_client = TcpClient(GameBox, host, port)
 
     def net_loop(self):
         # 这里将网络层作为一个单独的线程来处理了
