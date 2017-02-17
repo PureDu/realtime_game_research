@@ -150,6 +150,9 @@ class Client(object):
             try:
                 text = raw_input('please input(ready/move/hit):')
 
+                if not text:
+                    continue
+
                 box = GameBox()
 
                 if text == 'ready':
