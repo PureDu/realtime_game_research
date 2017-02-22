@@ -48,6 +48,7 @@ class Client(object):
         self.net_msg_queue = Queue.Queue()
         self.logic_msg_queue = Queue.Queue()
         self.tcp_client = TcpClient(GameBox, host, port)
+        self.tcp_client.tcp_nodelay = True
 
     def net_loop(self):
         # 这里将网络层作为一个单独的线程来处理了
